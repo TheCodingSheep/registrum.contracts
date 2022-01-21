@@ -11,10 +11,14 @@ contract Registrum {
     mapping(uint256 => string) public documents;
     mapping(uint256 => string) public proofs;
 
-    event DocumentRegistered(uint256 indexed documentId, string documentHash);
+    event DocumentRegistered(
+        uint256 indexed documentId,
+        string documentHash,
+        string proofHash
+    );
     event DocumentTransferred(
         uint256 indexed documentId,
-        string updatedDocumentHash
+        string updatedProofHash
     );
 
     modifier onlyAdmin() {
@@ -39,17 +43,19 @@ contract Registrum {
     function transferDocument(
         uint256 _documentId,
         string memory updatedProofHash
-    ) public onlyWhitelisted{
+    ) public onlyWhitelisted {
         proofs[_documentId] = updatedProofHash;
+        emit DocumentTransferred(_documentId, updatedProofHash);
     }
 
     function registerDocument(
         string memory documentHash,
         string memory proofHash
-    ) public onlyWhitelisted{
+    ) public onlyWhitelisted {
         documents[documentId] = documentHash;
         proofs[documentId] = proofHash;
         documentId++;
+        emit DocumentRegistered(documentId, documentHash, proofHash);
     }
 
     function whitelistFirm() public {
